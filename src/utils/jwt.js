@@ -6,9 +6,20 @@ const isTokenValid = (token) => {
 };
 
 const createToken = (payload) => {
-  return jwt.sign(user, process.env.JWT_SECRET, {
+  return jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_LIFETIME,
   });
 };
 
-module.exports = { isTokenValid, createToken };
+const attachCookiesToResponse = ({ res, payload }) => {
+  const token = createToken(payload);
+
+  res.cookie("token", token, {
+    httpOnly: true,
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    secure: process.env.NODE_ENV === "production",
+    signed: true,
+  });
+};
+
+module.exports = { isTokenValid, createToken, attachCookiesToResponse };
