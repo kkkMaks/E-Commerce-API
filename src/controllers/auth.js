@@ -48,7 +48,7 @@ const registerUser = async (req, res) => {
   });
   const tokenUser = { userId: user._id, name: user.name, role: user.role };
 
-  attachCookiesToResponse({ res, user: tokenUser });
+  attachCookiesToResponse({ res, payload: tokenUser });
 
   res.status(StatusCodes.CREATED).json({ user });
 };

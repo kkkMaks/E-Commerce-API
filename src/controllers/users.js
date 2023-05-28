@@ -26,11 +26,12 @@ const getSingleUser = async (req, res) => {
 
 const showCurrentUser = async (req, res) => {
   const { user } = req;
-  res.status(StatusCodes.OK).json({ user });
+  const currentUser = await User.findById({ _id: user.userId }).select("-__v");
+  res.status(StatusCodes.OK).json({ user: currentUser });
 };
 
 const updateUser = async (req, res) => {
-  const { id } = req.params;
+  const { userId: id } = req.user;
   const { name, email, role } = req.body;
 
   if (!name && !email) {
@@ -55,7 +56,7 @@ const updateUser = async (req, res) => {
 };
 
 const updateUserPassword = async (req, res) => {
-  const { id } = req.params;
+  const { userId: id } = req.user;
   const { oldPassword, newPassword1, newPassword2 } = req.body;
 
   const user = await User.findById({ _id: id }).select("+password");
@@ -66,7 +67,13 @@ const updateUserPassword = async (req, res) => {
   }
 
   if (newPassword1 !== newPassword2) {
-    throw new BadRequestError("Passwords do not match");
+    throw new BadRequestError("New passwords do not match");
+  }
+
+  if (oldPassword === newPassword1) {
+    throw new BadRequestError(
+      "New password cannot be the same as old password"
+    );
   }
 
   user.password = newPassword1;
