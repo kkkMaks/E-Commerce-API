@@ -4,14 +4,24 @@ require("express-async-errors");
 const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+const cloudinary = require("cloudinary").v2;
 
 const connectDB = require("./db/connect");
 
 const authRouter = require("./routes/auth");
 const usersRouter = require("./routes/users");
+const productsRouter = require("./routes/products");
+const uploadRouter = require("./routes/upload");
 
+const { authenticatedUser } = require("./middleware/authentication");
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
 
 const app = express();
 
@@ -34,6 +44,7 @@ app.get("/api/v1", (req, res) => {
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/products", authenticatedUser, productsRouter, uploadRouter);
 
 // error handler middleware
 app.use(notFoundMiddleware);
