@@ -6,12 +6,13 @@ const fs = require("fs");
 
 const Product = require("../models/Product");
 const { NotFoundError, BadRequestError } = require("../errors");
-const { checkPermissions } = require("../utils");
 
 const createProduct = async (req, res) => {
-  const products = await Product.create(req.body);
+  req.body.user = req.user.userId;
 
-  res.status(StatusCodes.CREATED).json({ msg: "createProduct" });
+  const product = await Product.create(req.body);
+
+  res.status(StatusCodes.CREATED).json({ product });
 };
 
 const getAllProducts = async (req, res) => {
@@ -25,29 +26,29 @@ const getSingleProduct = async (req, res) => {
 
   const product = await Product.findById({ _id: id });
 
+  if (!product) {
+    throw new NotFoundError(`No product with id ${id}`);
+  }
   res.status(StatusCodes.OK).json({ product });
 };
 
 const updateProduct = async (req, res) => {
   const { id } = req.params;
-  checkPermissions(req.user, id);
 
-  const procuct = await Product.findById({ _id: id });
+  const product = await Product.findOneAndUpdate({ _id: id }, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   if (!product) {
     throw new NotFoundError(`No product with id ${id}`);
   }
 
-  Object.assign(product, req.body);
-
-  await product.save();
-
-  res.status(StatusCodes.OK).json({ msg: "updateProduct" });
+  res.status(StatusCodes.OK).json({ product });
 };
 
 const deleteProduct = async (req, res) => {
   const { id } = req.params;
-  checkPermissions(req.user, id);
 
   const product = await Product.findByIdAndDelete({ _id: id });
 
@@ -63,6 +64,16 @@ const uploadProductImage = async (req, res) => {
 
   if (!productImage) {
     throw new BadRequestError("Please upload an image");
+  }
+
+  if (!productImage.mimetype.startsWith("image")) {
+    throw new BadRequestError("Please upload an image file");
+  }
+
+  if (productImage.size > process.env.MAX_FILE_UPLOAD) {
+    throw new BadRequestError(
+      `Please upload an image less than ${process.env.MAX_FILE_UPLOAD}`
+    );
   }
 
   const imagePath = path.join(productImage.destination, productImage.filename);

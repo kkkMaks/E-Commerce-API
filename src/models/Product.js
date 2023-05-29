@@ -38,6 +38,7 @@ const productSchema = new mongoose.Schema(
     },
     colors: {
       type: [String],
+      default: ["#000"],
       required: [true, "Please provide product colors"],
     },
     featured: {
@@ -51,6 +52,7 @@ const productSchema = new mongoose.Schema(
     inventory: {
       type: Number,
       required: [true, "Please provide product inventory"],
+      default: 1,
     },
     averageRating: {
       type: Number,

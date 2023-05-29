@@ -16,7 +16,10 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(authenticatedUser, authorizePermissions("admin", "owner"), getAllUsers);
+  .get(
+    [authenticatedUser, authorizePermissions("admin", "owner")],
+    getAllUsers
+  );
 router.route("/showMe").get(authenticatedUser, showCurrentUser);
 router.route("/updateUser").patch(authenticatedUser, updateUser);
 router
@@ -24,6 +27,9 @@ router
   .patch(authenticatedUser, updateUserPassword);
 router
   .route("/:id")
-  .get(authenticatedUser, authorizePermissions("admin", "user"), getSingleUser);
+  .get(
+    [authenticatedUser, authorizePermissions("admin", "user")],
+    getSingleUser
+  );
 
 module.exports = router;
