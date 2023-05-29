@@ -9,14 +9,14 @@ const {
 
 const {
   authenticatedUser,
-  authorizeAdminPermissions,
+  authorizePermissions,
 } = require("../middleware/authentication");
 
 const router = express.Router();
 
 router
   .route("/")
-  .get(authenticatedUser, authorizeAdminPermissions, getAllUsers);
+  .get(authenticatedUser, authorizePermissions("admin", "owner"), getAllUsers);
 router.route("/showMe").get(authenticatedUser, showCurrentUser);
 router.route("/updateUser").patch(authenticatedUser, updateUser);
 router
@@ -24,6 +24,6 @@ router
   .patch(authenticatedUser, updateUserPassword);
 router
   .route("/:id")
-  .get(authenticatedUser, authorizeAdminPermissions, getSingleUser);
+  .get(authenticatedUser, authorizePermissions("admin", "user"), getSingleUser);
 
 module.exports = router;

@@ -17,11 +17,13 @@ const authenticatedUser = async (req, res, next) => {
   }
 };
 
-const authorizeAdminPermissions = (req, res, next) => {
-  if (req.user.role !== "admin") {
-    throw new ForbiddenError("Only admins can access this route");
-  }
-  next();
+const authorizePermissions = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      throw new UnauthorizedError("Unauthorized to access this route");
+    }
+    next();
+  };
 };
 
-module.exports = { authenticatedUser, authorizeAdminPermissions };
+module.exports = { authenticatedUser, authorizePermissions };
