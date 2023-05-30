@@ -2,7 +2,7 @@ const { UnauthenticatedError } = require("../errors");
 
 const checkPermissions = (requestUser, resourceUserId) => {
   const isAdmin = requestUser.role === "admin";
-  const isOwner = requestUser.userId === resourceUserId;
+  const isOwner = requestUser.userId === resourceUserId.toString();
 
   if (isAdmin || isOwner) return;
 

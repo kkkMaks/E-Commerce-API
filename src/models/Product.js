@@ -56,9 +56,13 @@ const productSchema = new mongoose.Schema(
     },
     averageRating: {
       type: Number,
-      default: 4.5,
+      default: 1,
       min: [1, "Rating must be at least 1"],
       max: [5, "Rating cannot be more than 5"],
+    },
+    numOfReviews: {
+      type: Number,
+      default: 0,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -69,6 +73,14 @@ const productSchema = new mongoose.Schema(
   {
     timestamps: true,
     versionKey: false,
+  }
+);
+
+productSchema.pre(
+  "deleteOne",
+  { document: true, query: false },
+  async function () {
+    await this.model("Review").deleteMany({ product: this._id });
   }
 );
 

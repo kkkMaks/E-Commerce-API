@@ -14,7 +14,6 @@ const createReview = async (req, res) => {
   const { product } = req.body;
 
   const isValidProduct = await Product.findOne({ _id: product });
-  console.log(isValidProduct);
   if (!isValidProduct) {
     throw new NotFoundError(`No product with id ${product}`);
   }
@@ -77,7 +76,7 @@ const updateReview = async (req, res) => {
     throw new NotFoundError(`No review with id ${id}`);
   }
 
-  checkPermissions(req.user, review.user);
+  checkPermissions(req.user, review.user._id);
 
   Object.assign(review, req.body);
   await review.save();
@@ -94,11 +93,11 @@ const deleteReview = async (req, res) => {
     throw new NotFoundError(`No review with id ${id}`);
   }
 
-  checkPermissions(req.user, review.user);
+  checkPermissions(req.user, review.user._id);
 
-  await review.remove();
+  await review.deleteOne();
 
-  res.status(StatusCodes.OK).json({ msg: "deleteReview" });
+  res.status(StatusCodes.OK).json({ msg: "Success! Review removed" });
 };
 
 const getSingleProductReviews = async (req, res) => {
