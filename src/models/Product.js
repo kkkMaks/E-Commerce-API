@@ -66,8 +66,21 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true, versionKey: false }
+  {
+    timestamps: true,
+    versionKey: false,
+  }
 );
+
+// toJSON: { virtuals: true },
+// toObject: { virtuals: true },
+
+// productSchema.virtual("reviews", {
+//   ref: "Review",
+//   localField: "_id",
+//   foreignField: "product_id",
+//   justOne: false,
+// });
 
 const Product = mongoose.model("Product", productSchema);
 

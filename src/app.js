@@ -12,6 +12,7 @@ const authRouter = require("./routes/auth");
 const usersRouter = require("./routes/users");
 const productsRouter = require("./routes/products");
 const uploadRouter = require("./routes/upload");
+const reviewsRouter = require("./routes/reviews");
 
 const { authenticatedUser } = require("./middleware/authentication");
 const notFoundMiddleware = require("./middleware/not-found");
@@ -45,6 +46,7 @@ app.get("/api/v1", (req, res) => {
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/products", authenticatedUser, productsRouter, uploadRouter);
+app.use("/api/v1/reviews", authenticatedUser, reviewsRouter);
 
 // error handler middleware
 app.use(notFoundMiddleware);

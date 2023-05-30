@@ -20,14 +20,13 @@ const getAllUsers = async (req, res) => {
 };
 
 const getSingleUser = async (req, res) => {
-  const reqId = req.params.id;
-
-  const user = await User.findById({ _id: reqId }).select("-__v");
+  const { id: userId } = req.params;
+  const user = await User.findById({ _id: userId }).select("-__v");
 
   if (!user) {
-    throw new NotFoundError(`No user with id : ${reqId}`);
+    throw new NotFoundError(`No user with id : ${userId}`);
   }
-  checkPermissions(req.user, reqId);
+  checkPermissions(req.user, userId);
 
   res.status(StatusCodes.OK).json({ user });
 };
