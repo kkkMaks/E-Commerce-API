@@ -1,8 +1,13 @@
-const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
+const crypto = require("crypto");
 
+const User = require("../models/User");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
-const { attachCookiesToResponse, createTokenUser } = require("../utils");
+const {
+  attachCookiesToResponse,
+  createTokenUser,
+  sendVerificationEmail,
+} = require("../utils");
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -19,6 +24,10 @@ const loginUser = async (req, res) => {
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
     throw new UnauthenticatedError("Invalid credentials");
+  }
+
+  if (!user.isVerified) {
+    throw new UnauthenticatedError("Please verify your email");
   }
 
   const tokenUser = createTokenUser(user);
@@ -40,18 +49,23 @@ const registerUser = async (req, res) => {
   const isFirstAccount = (await User.countDocuments()) === 0;
   const role = isFirstAccount ? "admin" : "user";
 
+  const verificationToken = crypto.randomBytes(44).toString("hex");
+
   const user = await User.create({
     name,
     email,
     password,
     role,
+    verificationToken,
   });
 
-  const tokenUser = createTokenUser(user);
+  // send email
+  sendVerificationEmail(name, email, verificationToken);
 
-  attachCookiesToResponse({ res, payload: tokenUser });
-
-  res.status(StatusCodes.CREATED).json({ user });
+  res.status(StatusCodes.CREATED).json({
+    msg: "Success! Please check your email to verify your account",
+    verificationToken,
+  });
 };
 
 const logoutUser = async (req, res) => {
@@ -62,4 +76,28 @@ const logoutUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ message: "User logged out" });
 };
 
-module.exports = { loginUser, registerUser, logoutUser };
+const verifyEmail = async (req, res) => {
+  const { verificationToken, email } = req.query;
+
+  if (!verificationToken || !email)
+    throw new BadRequestError("Invalid email or token");
+
+  const user = await User.findOneAndUpdate(
+    { email, verificationToken },
+    {
+      isVerified: true,
+      verificationToken: "",
+      varifiedAt: new Date(),
+    },
+    { new: true }
+  );
+  if (!user) {
+    throw new BadRequestError(
+      "Invalid1 email or token or Email already verified"
+    );
+  }
+
+  res.status(StatusCodes.OK).json({ msg: "Account verified" });
+};
+
+module.exports = { loginUser, registerUser, logoutUser, verifyEmail };
