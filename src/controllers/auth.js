@@ -37,8 +37,14 @@ const loginUser = async (req, res) => {
 
   if (existingToken && existingToken.isValid) {
     refreshToken = existingToken.refreshToken;
-    attachCookiesToResponse({ res, payload: tokenUser, refreshToken });
-    return res.status(200).json({ msg: "Success! User logged in" });
+    const accessToken = attachCookiesToResponse({
+      res,
+      payload: tokenUser,
+      refreshToken,
+    });
+    return res
+      .status(200)
+      .json({ msg: "Success! User logged in", token: accessToken });
   }
 
   refreshToken = generateRandomToken();

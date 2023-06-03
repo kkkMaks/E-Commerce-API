@@ -24,7 +24,6 @@ const uploadRouter = require("./routes/upload");
 const reviewsRouter = require("./routes/reviews");
 const ordersRouter = require("./routes/orders");
 
-const { authenticatedUser } = require("./middleware/authentication");
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 

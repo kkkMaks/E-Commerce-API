@@ -1,10 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 
-const {
-  BadRequestError,
-  NotFoundError,
-  UnauthenticatedError,
-} = require("../errors");
+const { BadRequestError, NotFoundError } = require("../errors");
 const { checkPermissions } = require("../utils");
 
 const Review = require("../models/Review");

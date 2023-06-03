@@ -2,11 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
 
-const {
-  UnauthorizedError,
-  BadRequestError,
-  NotFoundError,
-} = require("../errors/index");
+const { BadRequestError, NotFoundError } = require("../errors/index");
 
 const { checkPermissions } = require("../utils");
 
