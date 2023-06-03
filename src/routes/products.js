@@ -21,13 +21,11 @@ router
   .route("/")
   .get(getAllProducts)
   .post([authenticatedUser, authorizePermissions("admin")], createProduct);
-
 router
   .route("/:id")
   .get(getSingleProduct)
   .patch([authenticatedUser, authorizePermissions("admin")], updateProduct)
   .delete([authenticatedUser, authorizePermissions("admin")], deleteProduct);
-
 router.route("/:id/reviews").get(getSingleProductReviews);
 
 module.exports = router;

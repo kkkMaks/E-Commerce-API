@@ -62,7 +62,7 @@ app.use("/api/v1/products", productsRouter, uploadRouter);
 app.use("/api/v1/reviews", reviewsRouter);
 app.use("/api/v1/orders", ordersRouter);
 app.use("/api/v1/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
-app.get("/api/v1/credetials/get-test-credentials", (req, res) => {
+app.get("/api/v1/credentials/get-test-credentials", (req, res) => {
   return res.status(200).json({
     admin: {
       email: "admin@gmail.com",

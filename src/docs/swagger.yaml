@@ -11,12 +11,14 @@ paths:
     post:
       tags:
         - Auth
-      summary: Login
-      description: Test Description
+      summary: User Login
+      description: |
+        Allows users to log in to the application.
+        Requires a valid email and password combination.
       operationId: Login
       parameters: []
       requestBody:
-        description: ""
+        description: Request body for user login.
         content:
           application/json:
             schema:
@@ -31,31 +33,37 @@ paths:
         required: true
       responses:
         "200":
-          description: ""
+          description: Successful login response.
           headers: {}
       deprecated: false
       security: []
+
   /auth/logout:
     get:
       tags:
         - Auth
-      summary: Logout
+      summary: User Logout
+      description: Logs out the currently authenticated user.
       operationId: Logout
       parameters: []
       responses:
         "200":
-          description: ""
+          description: Successful logout response.
           headers: {}
       deprecated: false
+
   /auth/register:
     post:
       tags:
         - Auth
-      summary: Register
+      summary: User Registration
+      description: |
+        Registers a new user in the application.
+        Requires a unique email address and a strong password.
       operationId: Register
       parameters: []
       requestBody:
-        description: ""
+        description: Request body for user registration.
         content:
           application/json:
             schema:
@@ -72,19 +80,23 @@ paths:
         required: true
       responses:
         "200":
-          description: ""
+          description: Successful registration response.
           headers: {}
       deprecated: false
       security: []
+
   /auth/verify-email:
     post:
       tags:
         - Auth
-      summary: Verify Email
+      summary: Email Verification
+      description: |
+        Verifies the user's email address using a verification token.
+        Requires a valid verification token and email address.
       operationId: VerifyEmail
       parameters: []
       requestBody:
-        description: ""
+        description: Request body for email verification.
         content:
           application/json:
             schema:
@@ -99,19 +111,23 @@ paths:
         required: true
       responses:
         "200":
-          description: ""
+          description: Successful email verification response.
           headers: {}
       deprecated: false
       security: []
+
   /auth/forgot-password:
     post:
       tags:
         - Auth
       summary: Forgot Password
+      description: |
+        Initiates the password reset process for a user.
+        Sends a password reset email to the provided email address.
       operationId: ForgotPassword
       parameters: []
       requestBody:
-        description: ""
+        description: Request body for forgot password.
         content:
           application/json:
             schema:
@@ -124,19 +140,23 @@ paths:
         required: true
       responses:
         "200":
-          description: ""
+          description: Successful forgot password response.
           headers: {}
       deprecated: false
       security: []
+
   /auth/reset-password:
     post:
       tags:
         - Auth
       summary: Reset Password
+      description: |
+        Resets the password for a user using a password reset token.
+        Requires a valid reset token, email address, and new password.
       operationId: ResetPassword
       parameters: []
       requestBody:
-        description: ""
+        description: Request body for password reset.
         content:
           application/json:
             schema:
@@ -155,57 +175,78 @@ paths:
         required: true
       responses:
         "200":
-          description: ""
+          description: Successful password reset response.
           headers: {}
       deprecated: false
+      security: []
+
   /users:
     get:
       tags:
         - Users
       summary: Get All Users
-      description: Only available for admin
+      description: |
+        Retrieves a list of all users in the system.
+        This endpoint is only available for administrators.
       operationId: GetAllUsers
       parameters: []
       responses:
         "200":
-          description: ""
+          description: Successful response with a list of users.
           headers: {}
       deprecated: false
+
   /users/{id}:
     get:
       tags:
         - Users
       summary: Get Single User
-      operationId: Users:id
-      parameters: []
+      description: |
+        Retrieves information about a single user.
+        This endpoint is only available for owner or administrators.
+        Requires the user ID.
+      operationId: GetSingleUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
-          description: ""
+          description: Successful response with user information.
           headers: {}
       deprecated: false
-      security: []
+
   /users/showMe:
     get:
       tags:
         - Users
-      summary: Get Single User
-      operationId: Product:id
+      summary: Get Current User
+      description: |
+        Retrieves information about the currently authenticated user.
+        Requires authentication.
+      operationId: GetCurrentUser
       parameters: []
       responses:
         "200":
-          description: ""
+          description: Successful response with current user information.
           headers: {}
       deprecated: false
       security: []
+
   /users/updateUser:
     patch:
       tags:
         - Users
       summary: Update User
+      description: |
+        Updates the information of a user.
+        Requires the updated user information as the request body.
       operationId: UpdateUser
       parameters: []
       requestBody:
-        description: ""
+        description: Request body for updating user information.
         content:
           application/json:
             schema:
@@ -220,23 +261,26 @@ paths:
         required: true
       responses:
         "200":
-          description: ""
+          description: Successful response after updating user information.
           headers: {}
       deprecated: false
+
   /users/updateUserPassword:
     patch:
       tags:
         - Users
-      summary: Update pwd
-      operationId: Updatepwd
+      summary: Update Password
+      description: |
+        Updates the password of a user.
+        Requires the user's old password and the new password as the request body.
+      operationId: UpdatePassword
       parameters: []
       requestBody:
-        description: ""
+        description: Request body for updating user password.
         content:
           application/json:
             schema:
               allOf:
-                - $ref: "#/components/schemas/UpdatepwdRequest"
                 - example:
                     oldPassword: Test1234
                     newPassword1: NewPassword
@@ -248,31 +292,36 @@ paths:
         required: true
       responses:
         "200":
-          description: ""
+          description: Successful response after updating user password.
           headers: {}
       deprecated: false
+
   /products:
     get:
       tags:
         - Products
-      summary: Products
-      operationId: Products
+      summary: Get Products
+      description: Retrieves a list of all products.
+      operationId: GetProducts
       parameters: []
       responses:
         "200":
-          description: ""
+          description: Successful response with a list of products.
           headers: {}
       deprecated: false
       security: []
+
     post:
       tags:
         - Products
       summary: Create Product
-      description: Only available for admin
+      description: |
+        Creates a new product in the system.
+        This endpoint is only available for administrators.
       operationId: CreateProduct
       parameters: []
       requestBody:
-        description: ""
+        description: Request body for creating a new product.
         content:
           application/json:
             schema:
@@ -288,20 +337,20 @@ paths:
                       - "#0000ff"
                     company: marcos
                     description: Cloud bread VHS hell of banjo bicycle rights jianbing umami mumblecore etsy 8-bit pok pok +1 wolf. Vexillologist yr dreamcatcher waistcoat, authentic chillwave trust fund. Viral typewriter fingerstache pinterest pork belly narwhal. Schlitz venmo everyday carry kitsch pitchfork chillwave iPhone taiyaki trust fund hashtag kinfolk microdosing gochujang live-edge
-            example:
-              name: armchair
-              price: 12599
-              image: https://dl.airtable.com/.attachmentThumbnails/530c07c5ade5acd9934c8dd334458b86/cf91397f
-              colors:
-                - "#000"
-                - "#00ff00"
-                - "#0000ff"
-              company: marcos
-              description: Cloud bread VHS hell of banjo bicycle rights jianbing umami mumblecore etsy 8-bit pok pok +1 wolf. Vexillologist yr dreamcatcher waistcoat, authentic chillwave trust fund. Viral typewriter fingerstache pinterest pork belly narwhal. Schlitz venmo everyday carry kitsch pitchfork chillwave iPhone taiyaki trust fund hashtag kinfolk microdosing gochujang live-edge
+              example:
+                name: armchair
+                price: 12599
+                image: https://dl.airtable.com/.attachmentThumbnails/530c07c5ade5acd9934c8dd334458b86/cf91397f
+                colors:
+                  - "#000"
+                  - "#00ff00"
+                  - "#0000ff"
+                company: marcos
+                description: Cloud bread VHS hell of banjo bicycle rights jianbing umami mumblecore etsy 8-bit pok pok +1 wolf. Vexillologist yr dreamcatcher waistcoat, authentic chillwave trust fund. Viral typewriter fingerstache pinterest pork belly narwhal. Schlitz venmo everyday carry kitsch pitchfork chillwave iPhone taiyaki trust fund hashtag kinfolk microdosing gochujang live-edge
         required: true
       responses:
         "200":
-          description: ""
+          description: Successful response after creating a product.
           headers: {}
       deprecated: false
 
@@ -310,22 +359,40 @@ paths:
       tags:
         - Products
       summary: Get Single Product
-      operationId: Product:id
-      parameters: []
+      description: |
+        Retrieves information about a single product.
+        Requires the product ID as a path parameter.
+      operationId: GetSingleProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
-          description: ""
+          description: Successful response with product information.
           headers: {}
       deprecated: false
       security: []
+
     patch:
       tags:
         - Products
       summary: Update Product
+      description: |
+        Updates the information of a product.
+        This endpoint is only available for administrators.
+
       operationId: UpdateProduct
-      parameters: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
-        description: ""
+        description: Request body for updating product information.
         content:
           application/json:
             schema:
@@ -333,48 +400,67 @@ paths:
                 - $ref: "#/components/schemas/UpdateProductRequest"
                 - example:
                     name: test
-            example:
-              name: test
+              example:
+                name: test
         required: true
       responses:
         "200":
-          description: ""
+          description: Successful response after updating product information.
           headers: {}
       deprecated: false
-  /products/id:
+
     delete:
       tags:
         - Products
       summary: Delete Product
+      description: |
+        Deletes a product from the system.
+        This endpoint is only available for administrators.
       operationId: DeleteProduct
-      parameters: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
-          description: ""
+          description: Successful response after deleting the product.
           headers: {}
       deprecated: false
+
   /products/upload-image:
     post:
       tags:
         - Products
       summary: Upload Image
+      description: Uploads an image for a product.
       operationId: UploadImage
       parameters: []
       responses:
         "200":
-          description: ""
+          description: Successful response after uploading the image.
           headers: {}
       deprecated: false
+
   /products/{id}/reviews:
     get:
       tags:
         - Products
       summary: Product Reviews
+      description: |
+        Retrieves the reviews for a specific product.
+        Requires the product ID as a path parameter.
       operationId: ProductReviews
-      parameters: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
-          description: ""
+          description: Successful response with product reviews.
           headers: {}
       deprecated: false
 
@@ -383,10 +469,11 @@ paths:
       tags:
         - Review
       summary: Create Review
+      description: Creates a new review for a product.
       operationId: CreateReview
       parameters: []
       requestBody:
-        description: ""
+        description: Request body for creating a review.
         content:
           application/json:
             schema:
@@ -395,75 +482,104 @@ paths:
                 - example:
                     rating: 3
                     title: Test1234
-                    comment: Test Commen1t
-                    product_id: 6475b57874875f930b1cd8bc
-            example:
-              rating: 3
-              title: Test1234
-              comment: Test Commen1t
-              product_id: 6475b57874875f930b1cd8bc
+                    comment: Test Comment
+                    product: 6475b57874875f930b1cd8bc
+              example:
+                rating: 3
+                title: Test1234
+                comment: Test Comment
+                product: 6475b57874875f930b1cd8bc
         required: true
       responses:
         "200":
-          description: ""
+          description: Successful response after creating a review.
           headers: {}
       deprecated: false
+
     get:
       tags:
         - Review
       summary: Get All Reviews
-      operationId: GetSingleReview
+      description: Retrieves all reviews.
+      operationId: GetAllReviews
       parameters: []
       responses:
         "200":
-          description: ""
+          description: Successful response with a list of reviews.
           headers: {}
       deprecated: false
       security: []
+
   /reviews/{id}:
     get:
       tags:
         - Review
       summary: Get Single Review
+      description: |
+        Retrieves information about a single review.
+        Requires the review ID as a path parameter.
       operationId: GetSingleReview
-      parameters: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
-          description: ""
+          description: Successful response with review information.
           headers: {}
       deprecated: false
       security: []
+
     patch:
       tags:
         - Review
       summary: Update Review
+      description: |
+        Updates the information of a review.
+        Requires the updated review information as the request body.
       operationId: UpdateReview
-      parameters: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
-          description: ""
+          description: Successful response after updating the review.
           headers: {}
       deprecated: false
+
     delete:
       tags:
         - Review
       summary: Delete Review
+      description: Deletes a review from the system.
       operationId: DeleteReview
-      parameters: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
-          description: ""
+          description: Successful response after deleting the review.
           headers: {}
       deprecated: false
+
   /orders:
     post:
       tags:
         - Orders
       summary: Create Order
+      description: Creates a new order with the provided items.
       operationId: CreateOrder
       parameters: []
       requestBody:
-        description: ""
+        description: Request body for creating an order.
         content:
           application/json:
             schema:
@@ -481,57 +597,75 @@ paths:
                         image: https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160
                         amount: 1
                         product: 6477265a9dfea3e390115e36
-            example:
-              items:
-                - name: bed
-                  price: 12599
-                  image: https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160
-                  amount: 1
-                  product: 64760dc6ed62831cf9bd36cf
-                - name: chair
-                  price: 12599
-                  image: https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160
-                  amount: 1
-                  product: 6477265a9dfea3e390115e36
+              example:
+                items:
+                  - name: bed
+                    price: 12599
+                    image: https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160
+                    amount: 1
+                    product: 64760dc6ed62831cf9bd36cf
+                  - name: chair
+                    price: 12599
+                    image: https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160
+                    amount: 1
+                    product: 6477265a9dfea3e390115e36
         required: true
       responses:
         "200":
-          description: ""
+          description: Successful response after creating an order.
           headers: {}
       deprecated: false
+
     get:
       tags:
         - Orders
       summary: Get All Orders
+      description: Retrieves all orders.
       operationId: GetAllOrders
       parameters: []
       responses:
         "200":
-          description: ""
+          description: Successful response with a list of orders.
           headers: {}
       deprecated: false
-      security: []
+
   /orders/{id}:
     get:
       tags:
         - Orders
       summary: Get Single Order
+      description: |
+        Retrieves information about a single order.
+        Requires the order ID as a path parameter.
       operationId: GetSingleOrder
-      parameters: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
-          description: ""
+          description: Successful response with order information.
           headers: {}
       deprecated: false
-      security: []
+
     patch:
       tags:
         - Orders
       summary: Update Order
+      description: |
+        Updates the information of an order.
+        Requires the updated order information as the request body.
       operationId: UpdateOrder
-      parameters: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
-        description: ""
+        description: Request body for updating an order.
         content:
           application/json:
             schema:
@@ -539,37 +673,40 @@ paths:
                 - $ref: "#/components/schemas/UpdateOrderRequest"
                 - example:
                     paymentIntentId: "123142"
-            example:
-              paymentIntentId: "123142"
+              example:
+                paymentIntentId: "123142"
         required: true
       responses:
         "200":
-          description: ""
+          description: Successful response after updating the order.
           headers: {}
       deprecated: false
+
   /orders/showAllMyOrders:
     get:
       tags:
         - Orders
       summary: Show All My Orders
+      description: Retrieves all orders associated with the authenticated user.
       operationId: ShowAllMyOrders
       parameters: []
       responses:
         "200":
-          description: ""
+          description: Successful response with a list of the user's orders.
           headers: {}
       deprecated: false
-      security: []
-  /credetials/get-test-credentials:
+
+  /credentials/get-test-credentials:
     get:
       tags:
         - Credentials
       summary: Get Test Credentials
+      description: Retrieves test credentials for testing purposes.
       operationId: GetTestCredentials
       parameters: []
       responses:
         "200":
-          description: ""
+          description: Successful response with test credentials.
           headers: {}
       deprecated: false
       security: []
@@ -577,117 +714,161 @@ paths:
 components:
   schemas:
     LoginRequest:
-      title: LoginRequest
-      required:
-        - email
-        - password
       type: object
       properties:
         email:
           type: string
+          format: email
+          description: The user's email address.
         password:
           type: string
+          description: The user's password.
+      required:
+        - email
+        - password
       example:
         email: maks1262343555@gmail.com
         password: Test123
+
     RegisterRequest:
-      title: RegisterRequest
-      required:
-        - name
-        - email
-        - password
       type: object
       properties:
         name:
           type: string
+          description: The user's name.
         email:
           type: string
+          format: email
+          description: The user's email address.
         password:
           type: string
+          description: The user's password.
+      required:
+        - name
+        - email
+        - password
       example:
         name: root
         email: test@gmail.com
         password: rootroot
+
     VerifyEmailRequest:
-      title: VerifyEmailRequest
-      required:
-        - verificationToken
-        - email
       type: object
       properties:
         verificationToken:
           type: string
+          description: The verification token received by email.
         email:
           type: string
+          format: email
+          description: The user's email address.
+      required:
+        - verificationToken
+        - email
       example:
         verificationToken: ccc945da001a58c8eaf59066e8da0888dfd6ada165c372a45cea047c2a5274c00edf3ec1ac8177c890900c97
         email: kurchenko.maks.fb04@gmail.com
+
     ForgotPasswordRequest:
-      title: ForgotPasswordRequest
-      required:
-        - email
       type: object
       properties:
         email:
           type: string
+          format: email
+          description: The user's email address.
+      required:
+        - email
       example:
         email: kurchenko.maks.fb04@gmail.com
+
     ResetPasswordRequest:
-      title: ResetPasswordRequest
+      type: object
+      properties:
+        resetPasswordToken:
+          type: string
+          description: The reset password token received by email.
+        email:
+          type: string
+          format: email
+          description: The user's email address.
+        password1:
+          type: string
+          description: The new password.
+        password2:
+          type: string
+          description: Confirmation of the new password.
       required:
         - resetPasswordToken
         - email
         - password1
         - password2
-      type: object
-      properties:
-        resetPasswordToken:
-          type: string
-        email:
-          type: string
-        password1:
-          type: string
-        password2:
-          type: string
       example:
         resetPasswordToken: 282fe0c10d3ee6e4243c17016ccbb7c05419d62fa2a94a5a1767df74a3766033dcd3054c7dd54e540e1ed08d
         email: kurchenko.maks.fb04@gmail.com
         password1: testreset
         password2: testreset
+
     UpdateUserRequest:
-      title: UpdateUserRequest
-      required:
-        - name
-        - role
       type: object
       properties:
         name:
           type: string
+          description: The updated user's name.
         role:
           type: string
+          description: The updated user's role.
+      required:
+        - name
+        - role
       example:
         name: Maks
         role: user
+
     UpdatepwdRequest:
-      title: UpdatepwdRequest
-      required:
-        - oldPassword
-        - newPassword1
-        - newPassword2
       type: object
       properties:
         oldPassword:
           type: string
+          description: The user's current password.
         newPassword1:
           type: string
+          description: The new password.
         newPassword2:
           type: string
+          description: Confirmation of the new password.
+      required:
+        - oldPassword
+        - newPassword1
+        - newPassword2
       example:
         oldPassword: Test1234
         newPassword1: NewPassword
         newPassword2: NewPassword
+
     CreateProductRequest:
-      title: CreateProductRequest
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the product.
+        price:
+          type: integer
+          format: int32
+          description: The price of the product in cents.
+        image:
+          type: string
+          description: The URL of the product image.
+        colors:
+          type: array
+          items:
+            type: string
+          description: The available colors for the product.
+        company:
+          type: string
+          description: The company name associated with the product.
+        description:
+          type: string
+          description: The description of the product.
       required:
         - name
         - price
@@ -695,24 +876,6 @@ components:
         - colors
         - company
         - description
-      type: object
-      properties:
-        name:
-          type: string
-        price:
-          type: integer
-          format: int32
-        image:
-          type: string
-        colors:
-          type: array
-          items:
-            type: string
-          description: ""
-        company:
-          type: string
-        description:
-          type: string
       example:
         name: armchair
         price: 12599
@@ -724,22 +887,16 @@ components:
         company: marcos
         description: Cloud bread VHS hell of banjo bicycle rights jianbing umami mumblecore etsy 8-bit pok pok +1 wolf. Vexillologist yr dreamcatcher waistcoat, authentic chillwave trust fund. Viral typewriter fingerstache pinterest pork belly narwhal. Schlitz venmo everyday carry kitsch pitchfork chillwave iPhone taiyaki trust fund hashtag kinfolk microdosing gochujang live-edge
     UpdateProductRequest:
-      title: UpdateProductRequest
-      required:
-        - name
       type: object
       properties:
         name:
           type: string
+      required:
+        - name
       example:
         name: test
+
     CreateReviewRequest:
-      title: CreateReviewRequest
-      required:
-        - rating
-        - title
-        - comment
-        - product_id
       type: object
       properties:
         rating:
@@ -751,22 +908,27 @@ components:
           type: string
         product_id:
           type: string
+      required:
+        - rating
+        - title
+        - comment
+        - product_id
       example:
         rating: 3
         title: Test1234
-        comment: Test Commen1t
+        comment: Test Comment
         product_id: 6475b57874875f930b1cd8bc
+
     CreateOrderRequest:
-      title: CreateOrderRequest
-      required:
-        - items
       type: object
       properties:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/Item"
+            $ref: "#/components/schemas/OrderItem"
           description: ""
+      required:
+        - items
       example:
         items:
           - name: bed
@@ -779,14 +941,8 @@ components:
             image: https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160
             amount: 1
             product: 6477265a9dfea3e390115e36
-    Item:
-      title: Item
-      required:
-        - name
-        - price
-        - image
-        - amount
-        - product
+
+    OrderItem:
       type: object
       properties:
         name:
@@ -801,22 +957,29 @@ components:
           format: int32
         product:
           type: string
+      required:
+        - name
+        - price
+        - image
+        - amount
+        - product
       example:
         name: bed
         price: 12599
         image: https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160
         amount: 1
         product: 64760dc6ed62831cf9bd36cf
+
     UpdateOrderRequest:
-      title: UpdateOrderRequest
-      required:
-        - paymentIntentId
       type: object
       properties:
         paymentIntentId:
           type: string
+      required:
+        - paymentIntentId
       example:
         paymentIntentId: "123142"
+
   securitySchemes:
     httpBearer:
       type: http
