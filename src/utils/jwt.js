@@ -27,6 +27,7 @@ const attachCookiesToResponse = ({ res, payload, refreshToken }) => {
     secure: process.env.NODE_ENV === "production",
     signed: true,
   });
+  return accessTokenJWT;
 };
 
 module.exports = { isTokenValid, createToken, attachCookiesToResponse };

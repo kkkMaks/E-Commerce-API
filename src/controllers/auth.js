@@ -52,9 +52,13 @@ const loginUser = async (req, res) => {
     isValid: true,
     user: user._id,
   });
-  attachCookiesToResponse({ res, payload: tokenUser, refreshToken });
+  const accessToken = attachCookiesToResponse({
+    res,
+    payload: tokenUser,
+    refreshToken,
+  });
 
-  res.status(200).json({ msg: "Success! User logged in" });
+  res.status(200).json({ msg: "Success! User logged in", token: accessToken });
 };
 
 const registerUser = async (req, res) => {

@@ -1,0 +1,832 @@
+openapi: 3.0.0
+info:
+  title: E-Commerce-API
+  contact: {}
+  version: "1.0"
+servers:
+  - url: https://e-commerce-kkkmaks-g7aal.ondigitalocean.app/api/v1
+    variables: {}
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      description: Test Description
+      operationId: Login
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/LoginRequest"
+                - example:
+                    email: admin@gmail.com
+                    password: adminadmin
+            example:
+              email: admin@gmail.com
+              password: adminadmin
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/logout:
+    get:
+      tags:
+        - Auth
+      summary: Logout
+      operationId: Logout
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register
+      operationId: Register
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/RegisterRequest"
+                - example:
+                    name: root
+                    email: test@gmail.com
+                    password: rootroot
+            example:
+              name: root
+              email: test@gmail.com
+              password: rootroot
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/verify-email:
+    post:
+      tags:
+        - Auth
+      summary: Verify Email
+      operationId: VerifyEmail
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/VerifyEmailRequest"
+                - example:
+                    verificationToken: ccc945da001a58c8eaf59066e8da0888dfd6ada165c372a45cea047c2a5274c00edf3ec1ac8177c890900c97
+                    email: kurchenko.maks.fb04@gmail.com
+            example:
+              verificationToken: ccc945da001a58c8eaf59066e8da0888dfd6ada165c372a45cea047c2a5274c00edf3ec1ac8177c890900c97
+              email: kurchenko.maks.fb04@gmail.com
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/forgot-password:
+    post:
+      tags:
+        - Auth
+      summary: Forgot Password
+      operationId: ForgotPassword
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/ForgotPasswordRequest"
+                - example:
+                    email: kurchenko.maks.fb04@gmail.com
+            example:
+              email: kurchenko.maks.fb04@gmail.com
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/reset-password:
+    post:
+      tags:
+        - Auth
+      summary: Reset Password
+      operationId: ResetPassword
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/ResetPasswordRequest"
+                - example:
+                    resetPasswordToken: 282fe0c10d3ee6e4243c17016ccbb7c05419d62fa2a94a5a1767df74a3766033dcd3054c7dd54e540e1ed08d
+                    email: kurchenko.maks.fb04@gmail.com
+                    password1: testreset
+                    password2: testreset
+            example:
+              resetPasswordToken: 282fe0c10d3ee6e4243c17016ccbb7c05419d62fa2a94a5a1767df74a3766033dcd3054c7dd54e540e1ed08d
+              email: kurchenko.maks.fb04@gmail.com
+              password1: testreset
+              password2: testreset
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get All Users
+      description: Only available for admin
+      operationId: GetAllUsers
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get Single User
+      operationId: Users:id
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /users/showMe:
+    get:
+      tags:
+        - Users
+      summary: Get Single User
+      operationId: Product:id
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /users/updateUser:
+    patch:
+      tags:
+        - Users
+      summary: Update User
+      operationId: UpdateUser
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/UpdateUserRequest"
+                - example:
+                    name: Maks
+                    role: user
+            example:
+              name: Maks
+              role: user
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /users/updateUserPassword:
+    patch:
+      tags:
+        - Users
+      summary: Update pwd
+      operationId: Updatepwd
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/UpdatepwdRequest"
+                - example:
+                    oldPassword: Test1234
+                    newPassword1: NewPassword
+                    newPassword2: NewPassword
+            example:
+              oldPassword: Test1234
+              newPassword1: NewPassword
+              newPassword2: NewPassword
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Products
+      operationId: Products
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+    post:
+      tags:
+        - Products
+      summary: Create Product
+      description: Only available for admin
+      operationId: CreateProduct
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/CreateProductRequest"
+                - example:
+                    name: armchair
+                    price: 12599
+                    image: https://dl.airtable.com/.attachmentThumbnails/530c07c5ade5acd9934c8dd334458b86/cf91397f
+                    colors:
+                      - "#000"
+                      - "#00ff00"
+                      - "#0000ff"
+                    company: marcos
+                    description: Cloud bread VHS hell of banjo bicycle rights jianbing umami mumblecore etsy 8-bit pok pok +1 wolf. Vexillologist yr dreamcatcher waistcoat, authentic chillwave trust fund. Viral typewriter fingerstache pinterest pork belly narwhal. Schlitz venmo everyday carry kitsch pitchfork chillwave iPhone taiyaki trust fund hashtag kinfolk microdosing gochujang live-edge
+            example:
+              name: armchair
+              price: 12599
+              image: https://dl.airtable.com/.attachmentThumbnails/530c07c5ade5acd9934c8dd334458b86/cf91397f
+              colors:
+                - "#000"
+                - "#00ff00"
+                - "#0000ff"
+              company: marcos
+              description: Cloud bread VHS hell of banjo bicycle rights jianbing umami mumblecore etsy 8-bit pok pok +1 wolf. Vexillologist yr dreamcatcher waistcoat, authentic chillwave trust fund. Viral typewriter fingerstache pinterest pork belly narwhal. Schlitz venmo everyday carry kitsch pitchfork chillwave iPhone taiyaki trust fund hashtag kinfolk microdosing gochujang live-edge
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get Single Product
+      operationId: Product:id
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+    patch:
+      tags:
+        - Products
+      summary: Update Product
+      operationId: UpdateProduct
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/UpdateProductRequest"
+                - example:
+                    name: test
+            example:
+              name: test
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /products/id:
+    delete:
+      tags:
+        - Products
+      summary: Delete Product
+      operationId: DeleteProduct
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /products/upload-image:
+    post:
+      tags:
+        - Products
+      summary: Upload Image
+      operationId: UploadImage
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /products/{id}/reviews:
+    get:
+      tags:
+        - Products
+      summary: Product Reviews
+      operationId: ProductReviews
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+
+  /reviews:
+    post:
+      tags:
+        - Review
+      summary: Create Review
+      operationId: CreateReview
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/CreateReviewRequest"
+                - example:
+                    rating: 3
+                    title: Test1234
+                    comment: Test Commen1t
+                    product_id: 6475b57874875f930b1cd8bc
+            example:
+              rating: 3
+              title: Test1234
+              comment: Test Commen1t
+              product_id: 6475b57874875f930b1cd8bc
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+    get:
+      tags:
+        - Review
+      summary: Get All Reviews
+      operationId: GetSingleReview
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /reviews/{id}:
+    get:
+      tags:
+        - Review
+      summary: Get Single Review
+      operationId: GetSingleReview
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+    patch:
+      tags:
+        - Review
+      summary: Update Review
+      operationId: UpdateReview
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+    delete:
+      tags:
+        - Review
+      summary: Delete Review
+      operationId: DeleteReview
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /orders:
+    post:
+      tags:
+        - Orders
+      summary: Create Order
+      operationId: CreateOrder
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/CreateOrderRequest"
+                - example:
+                    items:
+                      - name: bed
+                        price: 12599
+                        image: https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160
+                        amount: 1
+                        product: 64760dc6ed62831cf9bd36cf
+                      - name: chair
+                        price: 12599
+                        image: https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160
+                        amount: 1
+                        product: 6477265a9dfea3e390115e36
+            example:
+              items:
+                - name: bed
+                  price: 12599
+                  image: https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160
+                  amount: 1
+                  product: 64760dc6ed62831cf9bd36cf
+                - name: chair
+                  price: 12599
+                  image: https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160
+                  amount: 1
+                  product: 6477265a9dfea3e390115e36
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+    get:
+      tags:
+        - Orders
+      summary: Get All Orders
+      operationId: GetAllOrders
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /orders/{id}:
+    get:
+      tags:
+        - Orders
+      summary: Get Single Order
+      operationId: GetSingleOrder
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+    patch:
+      tags:
+        - Orders
+      summary: Update Order
+      operationId: UpdateOrder
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/UpdateOrderRequest"
+                - example:
+                    paymentIntentId: "123142"
+            example:
+              paymentIntentId: "123142"
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /orders/showAllMyOrders:
+    get:
+      tags:
+        - Orders
+      summary: Show All My Orders
+      operationId: ShowAllMyOrders
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /credetials/get-test-credentials:
+    get:
+      tags:
+        - Credentials
+      summary: Get Test Credentials
+      operationId: GetTestCredentials
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+
+components:
+  schemas:
+    LoginRequest:
+      title: LoginRequest
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: maks1262343555@gmail.com
+        password: Test123
+    RegisterRequest:
+      title: RegisterRequest
+      required:
+        - name
+        - email
+        - password
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        name: root
+        email: test@gmail.com
+        password: rootroot
+    VerifyEmailRequest:
+      title: VerifyEmailRequest
+      required:
+        - verificationToken
+        - email
+      type: object
+      properties:
+        verificationToken:
+          type: string
+        email:
+          type: string
+      example:
+        verificationToken: ccc945da001a58c8eaf59066e8da0888dfd6ada165c372a45cea047c2a5274c00edf3ec1ac8177c890900c97
+        email: kurchenko.maks.fb04@gmail.com
+    ForgotPasswordRequest:
+      title: ForgotPasswordRequest
+      required:
+        - email
+      type: object
+      properties:
+        email:
+          type: string
+      example:
+        email: kurchenko.maks.fb04@gmail.com
+    ResetPasswordRequest:
+      title: ResetPasswordRequest
+      required:
+        - resetPasswordToken
+        - email
+        - password1
+        - password2
+      type: object
+      properties:
+        resetPasswordToken:
+          type: string
+        email:
+          type: string
+        password1:
+          type: string
+        password2:
+          type: string
+      example:
+        resetPasswordToken: 282fe0c10d3ee6e4243c17016ccbb7c05419d62fa2a94a5a1767df74a3766033dcd3054c7dd54e540e1ed08d
+        email: kurchenko.maks.fb04@gmail.com
+        password1: testreset
+        password2: testreset
+    UpdateUserRequest:
+      title: UpdateUserRequest
+      required:
+        - name
+        - role
+      type: object
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+      example:
+        name: Maks
+        role: user
+    UpdatepwdRequest:
+      title: UpdatepwdRequest
+      required:
+        - oldPassword
+        - newPassword1
+        - newPassword2
+      type: object
+      properties:
+        oldPassword:
+          type: string
+        newPassword1:
+          type: string
+        newPassword2:
+          type: string
+      example:
+        oldPassword: Test1234
+        newPassword1: NewPassword
+        newPassword2: NewPassword
+    CreateProductRequest:
+      title: CreateProductRequest
+      required:
+        - name
+        - price
+        - image
+        - colors
+        - company
+        - description
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: integer
+          format: int32
+        image:
+          type: string
+        colors:
+          type: array
+          items:
+            type: string
+          description: ""
+        company:
+          type: string
+        description:
+          type: string
+      example:
+        name: armchair
+        price: 12599
+        image: https://dl.airtable.com/.attachmentThumbnails/530c07c5ade5acd9934c8dd334458b86/cf91397f
+        colors:
+          - "#000"
+          - "#00ff00"
+          - "#0000ff"
+        company: marcos
+        description: Cloud bread VHS hell of banjo bicycle rights jianbing umami mumblecore etsy 8-bit pok pok +1 wolf. Vexillologist yr dreamcatcher waistcoat, authentic chillwave trust fund. Viral typewriter fingerstache pinterest pork belly narwhal. Schlitz venmo everyday carry kitsch pitchfork chillwave iPhone taiyaki trust fund hashtag kinfolk microdosing gochujang live-edge
+    UpdateProductRequest:
+      title: UpdateProductRequest
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+      example:
+        name: test
+    CreateReviewRequest:
+      title: CreateReviewRequest
+      required:
+        - rating
+        - title
+        - comment
+        - product_id
+      type: object
+      properties:
+        rating:
+          type: integer
+          format: int32
+        title:
+          type: string
+        comment:
+          type: string
+        product_id:
+          type: string
+      example:
+        rating: 3
+        title: Test1234
+        comment: Test Commen1t
+        product_id: 6475b57874875f930b1cd8bc
+    CreateOrderRequest:
+      title: CreateOrderRequest
+      required:
+        - items
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Item"
+          description: ""
+      example:
+        items:
+          - name: bed
+            price: 12599
+            image: https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160
+            amount: 1
+            product: 64760dc6ed62831cf9bd36cf
+          - name: chair
+            price: 12599
+            image: https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160
+            amount: 1
+            product: 6477265a9dfea3e390115e36
+    Item:
+      title: Item
+      required:
+        - name
+        - price
+        - image
+        - amount
+        - product
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: integer
+          format: int32
+        image:
+          type: string
+        amount:
+          type: integer
+          format: int32
+        product:
+          type: string
+      example:
+        name: bed
+        price: 12599
+        image: https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160
+        amount: 1
+        product: 64760dc6ed62831cf9bd36cf
+    UpdateOrderRequest:
+      title: UpdateOrderRequest
+      required:
+        - paymentIntentId
+      type: object
+      properties:
+        paymentIntentId:
+          type: string
+      example:
+        paymentIntentId: "123142"
+  securitySchemes:
+    httpBearer:
+      type: http
+      scheme: bearer
+security:
+  - httpBearer: []
+tags:
+  - name: Auth
+  - name: Users
+  - name: Products
+  - name: Review
+  - name: Orders
+  - name: Credentials
