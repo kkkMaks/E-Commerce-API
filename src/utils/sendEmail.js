@@ -22,11 +22,13 @@ const sendEmail = async (name, email, subject, text) => {
 const sendResetPasswordEmail = async (name, email, resetToken) => {
   const mainText = "Please click on the link below to reset your password:";
   const url = `${BASE_URL}/auth/reset-password?resetToken=${resetToken}&email=${email}`;
+  const btnText = "Reset Password";
+
   const msg = {
     to: email,
     from: SENDER,
     subject: "Reset your password",
-    text: sendTemplateHTML(name, mainText, url, resetToken, email),
+    html: sendTemplateHTML(name, mainText, url, btnText),
   };
   const info = await sgMail.send(msg);
   return info;
@@ -35,12 +37,12 @@ const sendResetPasswordEmail = async (name, email, resetToken) => {
 const sendVerificationEmail = async (name, email, verificationToken) => {
   const mainText = "Please click on the button below to verify your email:";
   const url = `${BASE_URL}/auth/verify-email?verificationToken=${verificationToken}&email=${email}`;
-
+  const btnText = "Verify Email";
   const msg = {
     to: email,
     from: SENDER,
     subject: "Verify your email",
-    html: sendTemplateHTML(name, mainText, url, verificationToken, email),
+    html: sendTemplateHTML(name, mainText, url, btnText),
   };
   const info = await sgMail.send(msg);
   return info;

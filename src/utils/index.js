@@ -5,6 +5,7 @@ const {
 } = require("../utils/jwt");
 const createTokenUser = require("../utils/createTokenUser");
 const checkPermissions = require("../utils/checkPermissions");
+const generateRandomToken = require("../utils/randomToken");
 const {
   sendEmail,
   sendResetPasswordEmail,
@@ -20,4 +21,5 @@ module.exports = {
   sendEmail,
   sendResetPasswordEmail,
   sendVerificationEmail,
+  generateRandomToken,
 };

@@ -19,10 +19,8 @@ const authenticatedUser = async (req, res, next) => {
     throw new UnauthenticatedError("Token has expired or is invalid");
   }
   const payload = isTokenValid(refreshToken);
-  console.log(payload);
 
   if (!payload) {
-    const refreshToken = await Token.findOneAndRemove({ refreshToken });
     throw new UnauthenticatedError("Token has expired or is invalid");
   }
 

@@ -1,4 +1,4 @@
-const sendTemplateHTML = (name, mainText, url, verificationToken, email) => {
+const sendTemplateHTML = (name, mainText, url, btnText) => {
   return `<!DOCTYPE html>
 <html lang="en">
 
@@ -61,7 +61,7 @@ const sendTemplateHTML = (name, mainText, url, verificationToken, email) => {
         <div class="content">
             <h1>Hello, ${name}!</h1>
             <p>${mainText}</p>
-            <a href="${url}" class="button">Verify Email</a>
+            <a href="${url}" class="button">${btnText}</a>
         </div>
     </div>
 </body>

@@ -9,15 +9,21 @@ const {
   updateOrder,
 } = require("../controllers/order");
 
-const { authorizePermissions } = require("../middleware/authentication");
+const {
+  authenticatedUser,
+  authorizePermissions,
+} = require("../middleware/authentication");
 
 router
   .route("/")
-  .get(authorizePermissions("admin"), getAllOrders)
-  .post(createOrder);
+  .get([authenticatedUser, authorizePermissions("admin")], getAllOrders)
+  .post(authenticatedUser, createOrder);
 
-router.route("/showAllMyOrders").get(getCurrentUserOrders);
+router.route("/showAllMyOrders").get(authenticatedUser, getCurrentUserOrders);
 
-router.route("/:id").get(getSingleOrder).patch(updateOrder);
+router
+  .route("/:id")
+  .get(authenticatedUser, getSingleOrder)
+  .patch(authenticatedUser, updateOrder);
 
 module.exports = router;

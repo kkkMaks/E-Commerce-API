@@ -1,6 +1,4 @@
 const { StatusCodes } = require("http-status-codes");
-const crypto = require("crypto");
-
 const User = require("../models/User");
 const Token = require("../models/Token");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
@@ -8,8 +6,9 @@ const {
   attachCookiesToResponse,
   createTokenUser,
   sendVerificationEmail,
+  sendResetPasswordEmail,
+  generateRandomToken,
 } = require("../utils");
-const { isTokenValid } = require("../utils/jwt");
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -34,15 +33,15 @@ const loginUser = async (req, res) => {
 
   let refreshToken = "";
   const existingToken = await Token.findOne({ user: user._id });
+  const tokenUser = createTokenUser(user);
 
   if (existingToken && existingToken.isValid) {
     refreshToken = existingToken.refreshToken;
-    const tokenUser = createTokenUser(user);
     attachCookiesToResponse({ res, payload: tokenUser, refreshToken });
-    return res.status(200).json({ user });
+    return res.status(200).json({ msg: "Success! User logged in" });
   }
 
-  refreshToken = crypto.randomBytes(44).toString("hex");
+  refreshToken = generateRandomToken();
   const ip = req.ip;
   const userAgent = req.get("user-agent");
 
@@ -55,7 +54,7 @@ const loginUser = async (req, res) => {
   });
   attachCookiesToResponse({ res, payload: tokenUser, refreshToken });
 
-  res.status(200).json({ user });
+  res.status(200).json({ msg: "Success! User logged in" });
 };
 
 const registerUser = async (req, res) => {
@@ -70,14 +69,16 @@ const registerUser = async (req, res) => {
   const isFirstAccount = (await User.countDocuments()) === 0;
   const role = isFirstAccount ? "admin" : "user";
 
-  const verificationToken = crypto.randomBytes(44).toString("hex");
+  const verificationToken = generateRandomToken();
+  const resetPasswordToken = generateRandomToken();
 
-  const user = await User.create({
+  await User.create({
     name,
     email,
     password,
     role,
     verificationToken,
+    resetPasswordToken,
   });
 
   // send email
@@ -89,6 +90,7 @@ const registerUser = async (req, res) => {
 };
 
 const logoutUser = async (req, res) => {
+  await Token.deleteMany({ user: req.user.userId });
   res.cookie("accessToken", "logout", {
     httpOnly: true,
     expires: new Date(Date.now()),
@@ -101,7 +103,7 @@ const logoutUser = async (req, res) => {
 };
 
 const verifyEmail = async (req, res) => {
-  const { verificationToken, email } = req.query;
+  const { verificationToken, email } = req.body;
 
   if (!verificationToken || !email)
     throw new BadRequestError("Invalid email or token");
@@ -110,7 +112,7 @@ const verifyEmail = async (req, res) => {
     { email, verificationToken },
     {
       isVerified: true,
-      verificationToken: "",
+      verificationToken: null,
       varifiedAt: new Date(),
     },
     { new: true }
@@ -124,4 +126,60 @@ const verifyEmail = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "Account verified" });
 };
 
-module.exports = { loginUser, registerUser, logoutUser, verifyEmail };
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  if (!email) throw new BadRequestError("Please provide email");
+
+  const user = await User.findOne({ email });
+
+  if (user) {
+    const resetPasswordToken = generateRandomToken();
+    const tenMinutes = 1000 * 60 * 10;
+    const resetPasswordTokenExpire = new Date(Date.now() + tenMinutes);
+
+    user.resetPasswordToken = resetPasswordToken;
+    user.resetPasswordTokenExpire = resetPasswordTokenExpire;
+    sendResetPasswordEmail(user.name, email, resetPasswordToken);
+    await user.save();
+  }
+
+  res.status(StatusCodes.OK).json({ msg: "Check your email for reset link " });
+};
+
+const resetPassword = async (req, res) => {
+  const { resetPasswordToken, email, password1, password2 } = req.body;
+
+  if (!resetPasswordToken || !email || !password1 || !password2) {
+    throw new BadRequestError(
+      "Please provide all fields (token, email, password1, password2)"
+    );
+  }
+  if (password1 !== password2) {
+    throw new BadRequestError("Password does not match");
+  }
+  const user = await User.findOne({
+    email,
+    resetPasswordToken,
+  });
+
+  if (!user) throw new BadRequestError("Invalid1 email or token ");
+  if (user.resetPasswordTokenExpire < Date.now()) {
+    throw new BadRequestError("Reset password token expired");
+  }
+
+  user.password = password1;
+  user.resetPasswordToken = null;
+  user.resetPasswordTokenExpire = null;
+  await user.save();
+
+  res.status(StatusCodes.OK).json({ msg: "Password changed" });
+};
+
+module.exports = {
+  loginUser,
+  registerUser,
+  logoutUser,
+  verifyEmail,
+  forgotPassword,
+  resetPassword,
+};

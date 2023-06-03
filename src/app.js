@@ -52,18 +52,23 @@ app.get("/", (req, res) => {
   return res.status(200).json({ msg: "Hello world" });
 });
 
-app.get("/api/v1", (req, res) => {
-  // console.log(req.cookies);
-  console.log(req.c);
-  return res.status(200).json({ msg: "Hello world" });
-});
-
-// routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/products", productsRouter, uploadRouter);
 app.use("/api/v1/reviews", reviewsRouter);
 app.use("/api/v1/orders", authenticatedUser, ordersRouter);
+app.get("/api/v1/credetials/get-test-credentials", (req, res) => {
+  return res.status(200).json({
+    admin: {
+      email: "admin@gmail.com",
+      password: "adminadmin",
+    },
+    user: {
+      email: "test@gmail.com",
+      password: "testtest",
+    },
+  });
+});
 
 // error handler middleware
 app.use(notFoundMiddleware);
