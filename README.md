@@ -2,7 +2,7 @@
 
 Welcome to Project Name! This project is a web application that allows users to browse and purchase products, leave reviews, and manage their orders. It provides a seamless shopping experience and offers various features to enhance user engagement and satisfaction.
 
-You can find documentation for the API [here](https://e-commerce-kkkmaks-g7aal.ondigitalocean.app/api/v1/docs/)
+You can find documentation for the API here [https://e-commerce-kkkmaks-g7aal.ondigitalocean.app/api/v1/docs/](https://e-commerce-kkkmaks-g7aal.ondigitalocean.app/api/v1/docs/)
 
 ## Features
 
