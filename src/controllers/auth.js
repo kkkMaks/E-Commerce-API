@@ -2,12 +2,14 @@ const { StatusCodes } = require("http-status-codes");
 const crypto = require("crypto");
 
 const User = require("../models/User");
+const Token = require("../models/Token");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const {
   attachCookiesToResponse,
   createTokenUser,
   sendVerificationEmail,
 } = require("../utils");
+const { isTokenValid } = require("../utils/jwt");
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -30,9 +32,28 @@ const loginUser = async (req, res) => {
     throw new UnauthenticatedError("Please verify your email");
   }
 
-  const tokenUser = createTokenUser(user);
+  let refreshToken = "";
+  const existingToken = await Token.findOne({ user: user._id });
 
-  attachCookiesToResponse({ res, payload: tokenUser });
+  if (existingToken && existingToken.isValid) {
+    refreshToken = existingToken.refreshToken;
+    const tokenUser = createTokenUser(user);
+    attachCookiesToResponse({ res, payload: tokenUser, refreshToken });
+    return res.status(200).json({ user });
+  }
+
+  refreshToken = crypto.randomBytes(44).toString("hex");
+  const ip = req.ip;
+  const userAgent = req.get("user-agent");
+
+  await Token.create({
+    refreshToken,
+    ip,
+    userAgent,
+    isValid: true,
+    user: user._id,
+  });
+  attachCookiesToResponse({ res, payload: tokenUser, refreshToken });
 
   res.status(200).json({ user });
 };
@@ -60,16 +81,19 @@ const registerUser = async (req, res) => {
   });
 
   // send email
-  sendVerificationEmail(name, email, verificationToken);
+  await sendVerificationEmail(name, email, verificationToken);
 
   res.status(StatusCodes.CREATED).json({
     msg: "Success! Please check your email to verify your account",
-    verificationToken,
   });
 };
 
 const logoutUser = async (req, res) => {
-  res.cookie("token", "logout", {
+  res.cookie("accessToken", "logout", {
+    httpOnly: true,
+    expires: new Date(Date.now()),
+  });
+  res.cookie("refreshToken", "logout", {
     httpOnly: true,
     expires: new Date(Date.now()),
   });

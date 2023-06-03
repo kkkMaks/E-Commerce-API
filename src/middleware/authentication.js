@@ -1,20 +1,48 @@
 const { UnauthenticatedError, UnauthorizedError } = require("../errors");
+const Token = require("../models/Token");
 const { isTokenValid } = require("../utils/jwt");
+const { attachCookiesToResponse } = require("../utils");
 
 const authenticatedUser = async (req, res, next) => {
-  const token = req.signedCookies.token;
+  const { accessToken, refreshToken } = req.signedCookies;
+  if (accessToken) {
+    const payload = isTokenValid(accessToken);
+    if (!payload) {
+      throw new UnauthenticatedError("Invalid token");
+    }
 
-  if (!token) {
+    req.user = payload.user;
+    return next();
+  }
+
+  if (!refreshToken) {
+    throw new UnauthenticatedError("Token has expired or is invalid");
+  }
+  const payload = isTokenValid(refreshToken);
+  console.log(payload);
+
+  if (!payload) {
+    const refreshToken = await Token.findOneAndRemove({ refreshToken });
+    throw new UnauthenticatedError("Token has expired or is invalid");
+  }
+
+  const existingRefreshToken = await Token.findOne({
+    user: payload.user.userId,
+    refreshToken: payload.refreshToken,
+  });
+
+  if (!existingRefreshToken || !existingRefreshToken.isValid) {
     throw new UnauthenticatedError("Authentication invalid");
   }
 
-  try {
-    const { userId, name, role } = isTokenValid(token);
-    req.user = { userId, name, role };
-    next();
-  } catch (error) {
-    throw new UnauthenticatedError("Authentication invalid");
-  }
+  attachCookiesToResponse({
+    res,
+    payload: payload.user,
+    refreshToken: existingRefreshToken.refreshToken,
+  });
+
+  req.user = payload.user;
+  next();
 };
 
 const authorizePermissions = (...roles) => {

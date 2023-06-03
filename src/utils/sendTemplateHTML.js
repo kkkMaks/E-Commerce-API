@@ -1,4 +1,4 @@
-const sendTemplateHTML = (name, url, verificationToken, email) => {
+const sendTemplateHTML = (name, mainText, url, verificationToken, email) => {
   return `<!DOCTYPE html>
 <html lang="en">
 
@@ -60,8 +60,8 @@ const sendTemplateHTML = (name, url, verificationToken, email) => {
     <div class="container">
         <div class="content">
             <h1>Hello, ${name}!</h1>
-            <p>Please click on the button below to verify your email:</p>
-            <a href="${url}/auth/verify-email?verificationToken=${verificationToken}&email=${email}" class="button">Verify Email</a>
+            <p>${mainText}</p>
+            <a href="${url}" class="button">Verify Email</a>
         </div>
     </div>
 </body>

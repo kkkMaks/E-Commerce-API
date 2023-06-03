@@ -19,7 +19,7 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(getAllProducts)
+  .get(authenticatedUser, getAllProducts)
   .post([authenticatedUser, authorizePermissions("admin")], createProduct);
 
 router

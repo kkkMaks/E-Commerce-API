@@ -1,46 +1,46 @@
 const sgMail = require("@sendgrid/mail");
 const sendTemplateHTML = require("./sendTemplateHTML");
-
+const BASE_URL = "http://localhost:5000/api/v1";
 const SENDER = "kurmax-ipt24@lll.kpi.ua";
-const URL = "http://localhost:5000/api/v1";
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const sendEmail = async (email, subject, text) => {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const sendEmail = async (name, email, subject, text) => {
+  const mainText = text;
 
   const msg = {
     to: email, // Change to your recipient
     from: SENDER, // Change to your verified sender
     subject,
-    text,
+    html: sendTemplateHTML(name, mainText),
   };
 
   const info = await sgMail.send(msg);
 
-  return res.status(200).json({ info });
+  return info;
 };
 
-const sendResetPasswordEmail = async (email, resetToken) => {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
+const sendResetPasswordEmail = async (name, email, resetToken) => {
+  const mainText = "Please click on the link below to reset your password:";
+  const url = `${BASE_URL}/auth/reset-password?resetToken=${resetToken}&email=${email}`;
   const msg = {
     to: email,
     from: SENDER,
     subject: "Reset your password",
-    text: `Please click on the link below to reset your password: \n\n
-      ${URL}/reset-password/${resetToken}`,
+    text: sendTemplateHTML(name, mainText, url, resetToken, email),
   };
   const info = await sgMail.send(msg);
   return info;
 };
 
 const sendVerificationEmail = async (name, email, verificationToken) => {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  const mainText = "Please click on the button below to verify your email:";
+  const url = `${BASE_URL}/auth/verify-email?verificationToken=${verificationToken}&email=${email}`;
 
   const msg = {
     to: email,
     from: SENDER,
     subject: "Verify your email",
-    html: sendTemplateHTML(name, URL, verificationToken, email),
+    html: sendTemplateHTML(name, mainText, url, verificationToken, email),
   };
   const info = await sgMail.send(msg);
   return info;
